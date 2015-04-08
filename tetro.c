@@ -165,8 +165,8 @@ void tetro_turn_counter_clockwise(Tetro *tetro)
     tetro_shape_copy(old_shape,new_shape);
     break;
   }
-  tetro->orientation += 1;
-  if (tetro->orientation >= TETRO_ORIENTATION_MAX)
-    tetro->orientation = TETRO_UP;
+  tetro->orientation -= 1;
+  if (tetro->orientation < TETRO_UP)
+    tetro->orientation = TETRO_LEFT;
   tetro_shape_copy(new_shape,tetro->shape);
 }
