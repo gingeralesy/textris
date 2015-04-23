@@ -101,72 +101,82 @@ Tetro * tetro_init(TetroType tetro_type)
 
 void tetro_turn_clockwise(Tetro *tetro)
 {
-  int i,j;
-  char old_shape[4][4];
-  char new_shape[4][4];
-
-  tetro_shape_copy(tetro->shape,old_shape);
-  switch (tetro->type)
-  {
-  case TETRO_I:
-    for (i = 0; i < 4; i++)
-      for (j = 0; j < 4; j++)
-        new_shape[i][j] = old_shape[3-j][i];
-    break;
-  case TETRO_L:
-  case TETRO_J:
-  case TETRO_Z:
-  case TETRO_S:
-  case TETRO_T:
-    tetro_shape_null(new_shape);
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-        new_shape[i][j] = old_shape[2-j][i];
-    break;
-    break;
-  case TETRO_O:
-  default:
-    tetro_shape_copy(old_shape,new_shape);
-    break;
-  }
   tetro->orientation += 1;
   if (tetro->orientation >= TETRO_ORIENTATION_MAX)
     tetro->orientation = TETRO_UP;
-  tetro_shape_copy(new_shape,tetro->shape);
+
+  if (tetro->type > 0 && tetro->type < TETRO_TYPE_MAX &&
+      tetro->type != TETRO_O)
+  {
+    int i,j;
+    char old_shape[4][4];
+    char new_shape[4][4];
+
+    tetro_shape_copy(tetro->shape,old_shape);
+    switch (tetro->type)
+    {
+    case TETRO_I:
+      for (i = 0; i < 4; i++)
+        for (j = 0; j < 4; j++)
+          new_shape[i][j] = old_shape[3-j][i];
+      break;
+    case TETRO_L:
+    case TETRO_J:
+    case TETRO_Z:
+    case TETRO_S:
+    case TETRO_T:
+      tetro_shape_null(new_shape);
+      for (i = 0; i < 3; i++)
+        for (j = 0; j < 3; j++)
+          new_shape[i][j] = old_shape[2-j][i];
+      break;
+      break;
+    case TETRO_O:
+    default:
+      tetro_shape_copy(old_shape,new_shape);
+      break;
+    }
+    tetro_shape_copy(new_shape,tetro->shape);
+  }
 }
 
 void tetro_turn_counter_clockwise(Tetro *tetro)
 {
-  int i,j;
-  char old_shape[4][4];
-  char new_shape[4][4];
-
-  tetro_shape_copy(tetro->shape,old_shape);
-  switch (tetro->type)
-  {
-  case TETRO_I:
-    for (i = 0; i < 4; i++)
-      for (j = 0; j < 4; j++)
-        new_shape[i][j] = old_shape[j][3-i];
-    break;
-  case TETRO_L:
-  case TETRO_J:
-  case TETRO_Z:
-  case TETRO_S:
-  case TETRO_T:
-    tetro_shape_null(new_shape);
-    for (i = 0; i < 3; i++)
-      for (j = 0; j < 3; j++)
-        new_shape[i][j] = old_shape[j][2-i];
-    break;
-    break;
-  case TETRO_O:
-  default:
-    tetro_shape_copy(old_shape,new_shape);
-    break;
-  }
   tetro->orientation -= 1;
   if (tetro->orientation < TETRO_UP)
     tetro->orientation = TETRO_LEFT;
-  tetro_shape_copy(new_shape,tetro->shape);
+
+  if (tetro->type > 0 && tetro->type < TETRO_TYPE_MAX &&
+      tetro->type != TETRO_O)
+  {
+    int i,j;
+    char old_shape[4][4];
+    char new_shape[4][4];
+
+    tetro_shape_copy(tetro->shape,old_shape);
+    switch (tetro->type)
+    {
+    case TETRO_I:
+      for (i = 0; i < 4; i++)
+        for (j = 0; j < 4; j++)
+          new_shape[i][j] = old_shape[j][3-i];
+      break;
+    case TETRO_L:
+    case TETRO_J:
+    case TETRO_Z:
+    case TETRO_S:
+    case TETRO_T:
+      tetro_shape_null(new_shape);
+      for (i = 0; i < 3; i++)
+        for (j = 0; j < 3; j++)
+          new_shape[i][j] = old_shape[j][2-i];
+      break;
+      break;
+    case TETRO_O:
+    default:
+      tetro_shape_copy(old_shape,new_shape);
+      break;
+    }
+    tetro_shape_copy(new_shape,tetro->shape);
+  }
 }
