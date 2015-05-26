@@ -31,6 +31,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c11" />
 		</Compiler>
 		<Linker>
 			<Add library="ncurses" />
@@ -38,6 +39,7 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="main.h" />
 		<Unit filename="tetro.c">
 			<Option compilerVar="CC" />
 		</Unit>

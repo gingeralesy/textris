@@ -14,7 +14,7 @@ enum TetroType_e
   TETRO_T,
   TETRO_TYPE_MAX
 };
-typedef int TetroType;
+typedef short int TetroType;
 
 enum TetroOrientantion_e
 {
@@ -36,7 +36,7 @@ struct Tetro_st
 {
   TetroType type;
   char ch;
-  char shape[4][4];
+  char shape[16];
   TetroOrientation orientation;
 };
 typedef struct Tetro_st Tetro;
@@ -44,7 +44,7 @@ typedef struct Tetro_st Tetro;
 // Headers
 
 /** Initializes a tetro. */
-Tetro * tetro_init(TetroType tetro_type);
+Tetro tetro_init(TetroType tetro_type);
 /** Turns the tetro clockwise. */
 void tetro_turn_clockwise(Tetro *tetro);
 /** Turns the tetro counter-clockwise. */

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <ncurses.h>
 
-#include "tetro.h"
+#include "main.h"
 
 // Static interface headers
 /** Closes the program. */
@@ -16,8 +16,18 @@ static void update();
 
 // Variables
 int input;
+Entity entity;
 
-Tetro * tetro;
+// Public interface implementations
+// -- Entity
+Entity entity_init()
+{
+  Entity e;
+  e.tetro = tetro_init(TETRO_S);
+  e.x = 10;
+  e.y = 5;
+  return e;
+}
 
 // Static interface implementations
 static void close()
@@ -59,7 +69,7 @@ static void init()
   init_pair(TETRO_O,TETRO_O,TETRO_O);
   init_pair(TETRO_T,TETRO_T,TETRO_T);
 
-  tetro = tetro_init(TETRO_S);
+  entity = entity_init();
 }
 
 static void loop()
@@ -86,33 +96,33 @@ static void update()
   TetroType new_type;
   switch (input)
   {
-  case KEY_RIGHT:
-    tetro_turn_clockwise(tetro);
+  case KEY_UP:
+    tetro_turn_clockwise(&entity.tetro);
     break;
   case KEY_LEFT:
-    tetro_turn_counter_clockwise(tetro);
+    entity.x -= 1;
+    break;
+  case KEY_RIGHT:
+    entity.x += 1;
     break;
   case '1':
-    new_type = tetro->type + 1;
+    new_type = entity.tetro.type + 1;
     if (new_type == TETRO_TYPE_MAX)
       new_type = TETRO_I;
-    free(tetro);
-    tetro = tetro_init(new_type);
+    entity.tetro = tetro_init(new_type);
     break;
   }
 
-  attron(COLOR_PAIR(tetro->type));
+  attron(COLOR_PAIR(entity.tetro.type));
   for (i = 0; i < 4; i++)
   {
     for (j = 0; j < 4; j++)
     {
-      if (tetro->shape[i][j])
-      {
-        mvaddch(5 + i,10 + j,' ' | A_BOLD);
-      }
+      if (entity.tetro.shape[(i + 1) * (j + 1)])
+        mvaddch(entity.y + i,entity.x + j,' ' | A_BOLD);
     }
   }
-  attroff(COLOR_PAIR(tetro->type));
+  attroff(COLOR_PAIR(entity.tetro.type));
 }
 
 // Public interface
