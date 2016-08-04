@@ -11,23 +11,15 @@ const char TetroCharacters[] = { '\0', 'I', 'L', 'J', 'Z', 'S', 'O', 'T' };
 
 // Private headers
 
-static int tetro_rotate_left_int(int v);
 /** Copies shape from in to out. */
 static void tetro_shape_copy(char from[16],Tetro *tetro);
 /** Sets all values in shape to null character. */
 static void tetro_shape_null(Tetro *tetro);
+/** Converts x and y to array variable. */
+static int xy_to_i(int x, int y);
 
 // Implementations
 // Private
-static int tetro_rotate_left_int(int v)
-{
-  int x,y;
-  x = v % 4;
-  y = (v - x) / 4;
-
-
-}
-
 static void tetro_shape_copy(char from[16],Tetro *tetro)
 {
   int i;
@@ -117,34 +109,31 @@ void tetro_turn_clockwise(Tetro *tetro)
   if (_tetro.type > 0 && _tetro.type < TETRO_TYPE_MAX &&
       _tetro.type != TETRO_O)
   {
-    int i;
-    char old_shape[16];
-    char new_shape[16];
-
-    tetro_shape_copy(_tetro.shape,&old_shape);
+    int x,y;
     switch (_tetro.type)
     {
     case TETRO_I:
-      for (i = 0; i < 4; i++)
-        new_shape[i] = old_shape[3-i];
-      break;
     case TETRO_L:
     case TETRO_J:
     case TETRO_Z:
     case TETRO_S:
     case TETRO_T:
-      tetro_shape_null(&_tetro);
-      for (i = 0; i < 3; i++)
-        for (j = 0; j < 3; j++)
-          new_shape[i][j] = old_shape[2-j][i];
-      break;
+      for (x = 0; x < 2; x++)
+      {
+        for (y = x; y < 3 - x; y++)
+        {
+          int temp = _tetro.shape[xy_to_i(x,y)];
+          _tetro.shape[xy_to_i(x,y)] = _tetro.shape[xy_to_i(3-y,x)];
+          _tetro.shape[xy_to_i(3-y,x)] = _tetro.shape[xy_to_i(3-x,3-y)];
+          _tetro.shape[xy_to_i(3-x,3-y)] = _tetro.shape[xy_to_i(y,3-x)];
+          _tetro.shape[xy_to_i(y,3-x)] = temp;
+        }
+      }
       break;
     case TETRO_O:
     default:
-      tetro_shape_copy(old_shape,&new_shape);
       break;
     }
-    tetro_shape_copy(new_shape,&_tetro.shape);
   }
 }
 
@@ -158,33 +147,35 @@ void tetro_turn_counter_clockwise(Tetro *tetro)
   if (_tetro.type > 0 && _tetro.type < TETRO_TYPE_MAX &&
       _tetro.type != TETRO_O)
   {
-    int i,j;
-    char old_shape[4][4];
-    char new_shape[4][4];
-
-    tetro_shape_copy(_tetro.shape,&old_shape);
+    int x,y;
     switch (_tetro.type)
     {
     case TETRO_I:
-      for (i = 0; i < 4; i++)
-        for (j = 0; j < 4; j++)
-          new_shape[i][j] = old_shape[j][3-i];
-      break;
     case TETRO_L:
     case TETRO_J:
     case TETRO_Z:
     case TETRO_S:
     case TETRO_T:
-      tetro_shape_null(&_tetro);
-      for (i = 0; i < 3; i++)
-        for (j = 0; j < 3; j++)
-          new_shape[i][j] = old_shape[j][2-i];
-      break;
+      for (x = 0; x < 2; x++)
+      {
+        for (y = x; y < 3 - x; y++)
+        {
+          int temp = _tetro.shape[xy_to_i(x,y)];
+          _tetro.shape[xy_to_i(x,y)] = _tetro.shape[xy_to_i(y,3-x)];
+          _tetro.shape[xy_to_i(y,3-x)] = _tetro.shape[xy_to_i(3-x,3-y)];
+          _tetro.shape[xy_to_i(3-x,3-y)] = _tetro.shape[xy_to_i(3-y,x)];
+          _tetro.shape[xy_to_i(3-y,x)] = temp;
+        }
+      }
       break;
     case TETRO_O:
     default:
       break;
     }
-    tetro_shape_copy(new_shape,&_tetro);
   }
+}
+
+int xy_to_i(int x, int y)
+{
+  return (x + (y * 4));
 }
