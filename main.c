@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include <time.h>
+#include <math.h>
 
 #include "utils.h"
 
@@ -90,7 +91,7 @@ static void init()
 
 static void loop()
 {
-  static long int tick_length = (1000000000 / 30); // nanoseconds
+  static long int tick_length = (1000 / 30); // milliseconds
   long int last_update = 0;
   int input = ERR;
   int ch = ERR;
@@ -100,7 +101,7 @@ static void loop()
     struct timespec spec;
     long int time_now;
     clock_gettime(CLOCK_REALTIME, &spec);
-    time_now = spec.tv_nsec;
+    time_now = lround(spec.tv_nsec / 1000000.0);
 
     ch = getch();
     if (ch != ERR)

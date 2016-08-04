@@ -2,8 +2,8 @@
 
 set -e
 
-COM_CFLAGS=$(pkg-config --cflags ncurses)
-COM_LIBS=$(pkg-config --libs ncurses)
+COM_CFLAGS="$(pkg-config --cflags ncurses)"
+COM_LIBS="$(pkg-config --libs ncurses) -lm"
 
 C_FILES=$(ls *.c)
 OUTPUT=$(dirname "$0")"/bin/textris"
