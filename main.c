@@ -18,10 +18,11 @@ static void loop();
 /** Paint call */
 static void paint();
 /** Update call. */
-static void update();
+static void update(int input);
 
 // Variables
 Entity * entity;
+FILE * logger;
 
 // Public interface implementations
 // -- Entity
@@ -48,16 +49,25 @@ void entity_free(Entity *e)
 // Static interface implementations
 static void close()
 {
+  fclose(logger);
   entity_free(entity);
   endwin();
 }
 
 static void init()
 {
+  logger = fopen("textris.out","w");
+  if (!logger)
+  {
+    printf("Failed to open log file.\n");
+    exit(EXIT_FAILURE);
+  }
+
   initscr();
 
   if (has_colors() == FALSE)
   {
+    fclose(logger);
     endwin();
     printf("Does not support colours!\n");
     exit(EXIT_FAILURE);
@@ -101,18 +111,19 @@ static void loop()
     struct timespec spec;
     long int time_now;
     clock_gettime(CLOCK_REALTIME, &spec);
-    time_now = lround(spec.tv_nsec / 1000000.0);
+    time_now = lround((double)spec.tv_nsec / 1000000.0);
 
     ch = getch();
-    if (ch != ERR)
+    if (ch && ch != ERR)
       input = ch;
 
     if (tick_length <= time_now - last_update)
     {
       last_update = time_now;
-      
+     
       if (input != ERR)
       {
+        fprintf(logger, "Updating... Input '%c'\n", input);
         update(input);
         input = ERR;
       }
