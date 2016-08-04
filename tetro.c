@@ -105,18 +105,18 @@ Tetro * tetro_init(TetroType tetro_type)
   return tetro;
 }
 
-void tetro_turn_clockwise(Tetro *tetro)
+void tetro_turn_clockwise(Tetro **tetro)
 {
-  Tetro _tetro = *tetro;
-  _tetro.orientation += 1;
-  if (_tetro.orientation >= TETRO_ORIENTATION_MAX)
-    _tetro.orientation = TETRO_UP;
+  Tetro *_tetro = *tetro;
+  _tetro->orientation += 1;
+  if (_tetro->orientation >= TETRO_ORIENTATION_MAX)
+    _tetro->orientation = TETRO_UP;
 
-  if (_tetro.type > 0 && _tetro.type < TETRO_TYPE_MAX &&
-      _tetro.type != TETRO_O)
+  if (_tetro->type > 0 && _tetro->type < TETRO_TYPE_MAX &&
+      _tetro->type != TETRO_O)
   {
     int x,y;
-    switch (_tetro.type)
+    switch (_tetro->type)
     {
     case TETRO_I:
     case TETRO_L:
@@ -128,11 +128,11 @@ void tetro_turn_clockwise(Tetro *tetro)
       {
         for (y = x; y < 3 - x; y++)
         {
-          int temp = _tetro.shape[xy_to_i(x,y)];
-          _tetro.shape[xy_to_i(x,y)] = _tetro.shape[xy_to_i(3-y,x)];
-          _tetro.shape[xy_to_i(3-y,x)] = _tetro.shape[xy_to_i(3-x,3-y)];
-          _tetro.shape[xy_to_i(3-x,3-y)] = _tetro.shape[xy_to_i(y,3-x)];
-          _tetro.shape[xy_to_i(y,3-x)] = temp;
+          int temp = _tetro->shape[xy_to_i(x,y)];
+          _tetro->shape[xy_to_i(x,y)] = _tetro->shape[xy_to_i(3-y,x)];
+          _tetro->shape[xy_to_i(3-y,x)] = _tetro->shape[xy_to_i(3-x,3-y)];
+          _tetro->shape[xy_to_i(3-x,3-y)] = _tetro->shape[xy_to_i(y,3-x)];
+          _tetro->shape[xy_to_i(y,3-x)] = temp;
         }
       }
       break;
@@ -143,18 +143,18 @@ void tetro_turn_clockwise(Tetro *tetro)
   }
 }
 
-void tetro_turn_counter_clockwise(Tetro *tetro)
+void tetro_turn_counter_clockwise(Tetro **tetro)
 {
-  Tetro _tetro = *tetro;
-  _tetro.orientation -= 1;
-  if (_tetro.orientation < TETRO_UP)
-    _tetro.orientation = TETRO_LEFT;
+  Tetro *_tetro = *tetro;
+  _tetro->orientation -= 1;
+  if (_tetro->orientation < TETRO_UP)
+    _tetro->orientation = TETRO_LEFT;
 
-  if (_tetro.type > 0 && _tetro.type < TETRO_TYPE_MAX &&
-      _tetro.type != TETRO_O)
+  if (_tetro->type > 0 && _tetro->type < TETRO_TYPE_MAX &&
+      _tetro->type != TETRO_O)
   {
     int x,y;
-    switch (_tetro.type)
+    switch (_tetro->type)
     {
     case TETRO_I:
     case TETRO_L:
@@ -166,11 +166,11 @@ void tetro_turn_counter_clockwise(Tetro *tetro)
       {
         for (y = x; y < 3 - x; y++)
         {
-          int temp = _tetro.shape[xy_to_i(x,y)];
-          _tetro.shape[xy_to_i(x,y)] = _tetro.shape[xy_to_i(y,3-x)];
-          _tetro.shape[xy_to_i(y,3-x)] = _tetro.shape[xy_to_i(3-x,3-y)];
-          _tetro.shape[xy_to_i(3-x,3-y)] = _tetro.shape[xy_to_i(3-y,x)];
-          _tetro.shape[xy_to_i(3-y,x)] = temp;
+          int temp = _tetro->shape[xy_to_i(x,y)];
+          _tetro->shape[xy_to_i(x,y)] = _tetro->shape[xy_to_i(y,3-x)];
+          _tetro->shape[xy_to_i(y,3-x)] = _tetro->shape[xy_to_i(3-x,3-y)];
+          _tetro->shape[xy_to_i(3-x,3-y)] = _tetro->shape[xy_to_i(3-y,x)];
+          _tetro->shape[xy_to_i(3-y,x)] = temp;
         }
       }
       break;

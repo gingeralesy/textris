@@ -48,8 +48,8 @@ void tetro_free(Tetro *tetro);
 /** Initializes a tetro. */
 Tetro * tetro_init(TetroType tetro_type);
 /** Turns the tetro clockwise. */
-void tetro_turn_clockwise(Tetro *tetro);
+void tetro_turn_clockwise(Tetro **tetro);
 /** Turns the tetro counter-clockwise. */
-void tetro_turn_counter_clockwise(Tetro *tetro);
+void tetro_turn_counter_clockwise(Tetro **tetro);
 
 #endif // TETRO_H_INCLUDED

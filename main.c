@@ -111,7 +111,7 @@ static void update()
   switch (input)
   {
   case KEY_UP:
-    tetro_turn_clockwise(entity->tetro);
+    tetro_turn_clockwise(&entity->tetro);
     break;
   case KEY_LEFT:
     entity->x -= 1;
