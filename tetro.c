@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "utils.h"
+
 #include "tetro.h"
 
 // Tetro data and functions
@@ -15,8 +17,6 @@ const char TetroCharacters[] = { '\0', 'I', 'L', 'J', 'Z', 'S', 'O', 'T' };
 static void tetro_shape_copy(char from[16],Tetro *tetro);
 /** Sets all values in shape to null character. */
 static void tetro_shape_null(Tetro *tetro);
-/** Converts x and y to array variable. */
-static int xy_to_i(int x, int y);
 
 // Implementations
 // Private
@@ -38,63 +38,69 @@ static void tetro_shape_null(Tetro *tetro)
 
 // Public
 
-Tetro tetro_init(TetroType tetro_type)
+void tetro_free(Tetro *tetro)
 {
-  Tetro tetro;
+  if (tetro)
+    free(tetro);
+}
+
+Tetro * tetro_init(TetroType tetro_type)
+{
+  Tetro *tetro = malloc(sizeof(Tetro));
   char ch = TetroCharacters[tetro_type];
 
-  tetro_shape_null(&tetro);
+  tetro_shape_null(tetro);
 
   switch (tetro_type)
   {
   case TETRO_I:
-    tetro.shape[2] = ch; // 1,0
-    tetro.shape[5] = ch; // 1,1
-    tetro.shape[9] = ch; // 1,2
-    tetro.shape[13] = ch; // 1,3
+    tetro->shape[2] = ch; // 1,0
+    tetro->shape[5] = ch; // 1,1
+    tetro->shape[9] = ch; // 1,2
+    tetro->shape[13] = ch; // 1,3
     break;
   case TETRO_L:
-    tetro.shape[2] = ch; // 1,0
-    tetro.shape[5] = ch; // 1,1
-    tetro.shape[9] = ch; // 1,2
-    tetro.shape[3] = ch; // 0,2
+    tetro->shape[2] = ch; // 1,0
+    tetro->shape[5] = ch; // 1,1
+    tetro->shape[9] = ch; // 1,2
+    tetro->shape[3] = ch; // 0,2
     break;
   case TETRO_J:
-    tetro.shape[2] = ch; // 1,0
-    tetro.shape[5] = ch; // 1,1
-    tetro.shape[9] = ch; // 1,2
-    tetro.shape[0] = ch; // 0,0
+    tetro->shape[2] = ch; // 1,0
+    tetro->shape[5] = ch; // 1,1
+    tetro->shape[9] = ch; // 1,2
+    tetro->shape[0] = ch; // 0,0
     break;
   case TETRO_Z:
-    tetro.shape[0] = ch; // 0,0
-    tetro.shape[1] = ch; // 0,1
-    tetro.shape[5] = ch; // 1,1
-    tetro.shape[6] = ch; // 1,2
+    tetro->shape[0] = ch; // 0,0
+    tetro->shape[1] = ch; // 0,1
+    tetro->shape[5] = ch; // 1,1
+    tetro->shape[6] = ch; // 1,2
     break;
   case TETRO_S:
-    tetro.shape[1] = ch; // 0,1
-    tetro.shape[2] = ch; // 0,2
-    tetro.shape[4] = ch; // 1,0
-    tetro.shape[5] = ch; // 1,1
+    tetro->shape[1] = ch; // 0,1
+    tetro->shape[2] = ch; // 0,2
+    tetro->shape[4] = ch; // 1,0
+    tetro->shape[5] = ch; // 1,1
     break;
   case TETRO_O:
-    tetro.shape[1] = ch; // 0,1
-    tetro.shape[2] = ch; // 0,2
-    tetro.shape[5] = ch; // 1,1
-    tetro.shape[6] = ch; // 1,2
+    tetro->shape[1] = ch; // 0,1
+    tetro->shape[2] = ch; // 0,2
+    tetro->shape[5] = ch; // 1,1
+    tetro->shape[6] = ch; // 1,2
     break;
   case TETRO_T:
-    tetro.shape[1] = ch; // 0,1
-    tetro.shape[4] = ch; // 1,0
-    tetro.shape[5] = ch; // 1,1
-    tetro.shape[6] = ch; // 1,2
+    tetro->shape[1] = ch; // 0,1
+    tetro->shape[4] = ch; // 1,0
+    tetro->shape[5] = ch; // 1,1
+    tetro->shape[6] = ch; // 1,2
     break;
   default:
     exit(EXIT_FAILURE);
   }
-  tetro.type = tetro_type;
-  tetro.ch = ch;
-  tetro.orientation = TETRO_UP;
+  tetro->type = tetro_type;
+  tetro->ch = ch;
+  tetro->orientation = TETRO_UP;
 
   return tetro;
 }
@@ -173,9 +179,4 @@ void tetro_turn_counter_clockwise(Tetro *tetro)
       break;
     }
   }
-}
-
-int xy_to_i(int x, int y)
-{
-  return (x + (y * 4));
 }

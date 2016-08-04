@@ -4,7 +4,7 @@
 #include "tetro.h"
 
 typedef struct Entity_st {
-  Tetro tetro;
+  Tetro * tetro;
   int x;
   int y;
 } Entity;

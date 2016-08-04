@@ -43,8 +43,10 @@ typedef struct Tetro_st Tetro;
 
 // Headers
 
+/** Free tetro from memory */
+void tetro_free(Tetro *tetro);
 /** Initializes a tetro. */
-Tetro tetro_init(TetroType tetro_type);
+Tetro * tetro_init(TetroType tetro_type);
 /** Turns the tetro clockwise. */
 void tetro_turn_clockwise(Tetro *tetro);
 /** Turns the tetro counter-clockwise. */
