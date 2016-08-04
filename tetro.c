@@ -14,26 +14,26 @@ const char TetroCharacters[] = { '\0', 'I', 'L', 'J', 'Z', 'S', 'O', 'T' };
 // Private headers
 
 /** Copies shape from in to out. */
-static void tetro_shape_copy(char from[16],Tetro *tetro);
+static void tetro_shape_copy(char from[16],Tetro **tetro);
 /** Sets all values in shape to null character. */
-static void tetro_shape_null(Tetro *tetro);
+static void tetro_shape_null(Tetro **tetro);
 
 // Implementations
 // Private
-static void tetro_shape_copy(char from[16],Tetro *tetro)
+static void tetro_shape_copy(char from[16],Tetro **tetro)
 {
   int i;
-  Tetro _tetro = *tetro;
+  Tetro *_tetro = *tetro;
   for (i = 0; i < 16; i++)
-    _tetro.shape[i] = from[i];
+    _tetro->shape[i] = from[i];
 }
 
-static void tetro_shape_null(Tetro *tetro)
+static void tetro_shape_null(Tetro **tetro)
 {
   int i;
-  Tetro _tetro = *tetro;
+  Tetro *_tetro = *tetro;
   for (i = 0; i < 16; i++)
-    _tetro.shape[i] = '\0';
+    _tetro->shape[i] = '\0';
 }
 
 // Public
@@ -49,24 +49,24 @@ Tetro * tetro_init(TetroType tetro_type)
   Tetro *tetro = malloc(sizeof(Tetro));
   char ch = TetroCharacters[tetro_type];
 
-  tetro_shape_null(tetro);
+  tetro_shape_null(&tetro);
 
   switch (tetro_type)
   {
   case TETRO_I:
-    tetro->shape[2] = ch; // 1,0
+    tetro->shape[1] = ch; // 1,0
     tetro->shape[5] = ch; // 1,1
     tetro->shape[9] = ch; // 1,2
     tetro->shape[13] = ch; // 1,3
     break;
   case TETRO_L:
-    tetro->shape[2] = ch; // 1,0
+    tetro->shape[1] = ch; // 1,0
     tetro->shape[5] = ch; // 1,1
     tetro->shape[9] = ch; // 1,2
-    tetro->shape[3] = ch; // 0,2
+    tetro->shape[2] = ch; // 0,2
     break;
   case TETRO_J:
-    tetro->shape[2] = ch; // 1,0
+    tetro->shape[1] = ch; // 1,0
     tetro->shape[5] = ch; // 1,1
     tetro->shape[9] = ch; // 1,2
     tetro->shape[0] = ch; // 0,0
@@ -84,10 +84,10 @@ Tetro * tetro_init(TetroType tetro_type)
     tetro->shape[5] = ch; // 1,1
     break;
   case TETRO_O:
-    tetro->shape[1] = ch; // 0,1
-    tetro->shape[2] = ch; // 0,2
+    tetro->shape[1] = ch; // 1,0
+    tetro->shape[2] = ch; // 2,0
     tetro->shape[5] = ch; // 1,1
-    tetro->shape[6] = ch; // 1,2
+    tetro->shape[6] = ch; // 2,1
     break;
   case TETRO_T:
     tetro->shape[1] = ch; // 0,1
