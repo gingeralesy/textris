@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ncurses.h>
+#include <time.h>
 
 #include "utils.h"
 
@@ -13,11 +14,12 @@ static void close();
 static void init();
 /** Update loop. */
 static void loop();
+/** Paint call */
+static void paint();
 /** Update call. */
 static void update();
 
 // Variables
-int input;
 Entity * entity;
 
 // Public interface implementations
@@ -88,25 +90,57 @@ static void init()
 
 static void loop()
 {
-  input = ERR;
-  update();
+  static long int tick_length = (1000000000 / 30); // nanoseconds
+  long int last_update = 0;
+  int input = ERR;
+  int ch = ERR;
+
   do
   {
-    input = getch();
-    if (input != ERR)
+    struct timespec spec;
+    long int time_now;
+    clock_gettime(CLOCK_REALTIME, &spec);
+    time_now = spec.tv_nsec;
+
+    ch = getch();
+    if (ch != ERR)
+      input = ch;
+
+    if (tick_length <= time_now - last_update)
     {
-      clear();
-
-      update();
-
-      refresh();
+      last_update = time_now;
+      
+      if (input != ERR)
+      {
+        update(input);
+        input = ERR;
+      }
+      paint();
     }
-  } while (input != 'q');
+  } while (ch != 'q');
 }
 
-static void update()
+static void paint()
 {
   int x,y;
+  clear();
+  
+  attron(COLOR_PAIR(entity->tetro->type));
+  for (x = 0; x < 4; x++)
+  {
+    for (y = 0; y < 4; y++)
+    {
+      if (entity->tetro->shape[xy_to_i(x,y)] != '\0')
+        mvaddch(entity->y + y,entity->x + x,' ' | A_BOLD);
+    }
+  }
+  attroff(COLOR_PAIR(entity->tetro->type));
+  
+  refresh();
+}
+
+static void update(int input)
+{
   TetroType new_type;
   switch (input)
   {
@@ -126,18 +160,9 @@ static void update()
     tetro_free(entity->tetro);
     entity->tetro = tetro_init(new_type);
     break;
+  default:
+    break;
   }
-
-  attron(COLOR_PAIR(entity->tetro->type));
-  for (x = 0; x < 4; x++)
-  {
-    for (y = 0; y < 4; y++)
-    {
-      if (entity->tetro->shape[xy_to_i(x,y)] != '\0')
-        mvaddch(entity->y + y,entity->x + x,' ' | A_BOLD);
-    }
-  }
-  attroff(COLOR_PAIR(entity->tetro->type));
 }
 
 // Public interface
